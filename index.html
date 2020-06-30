@@ -125,7 +125,10 @@
                     className: "text-label",
                     offset: [0, 12]
                 }).openTooltip();
+		 .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+   		 .openPopup();
         }
+
     });
     // project area -> this is quite big and slowing down
     var regionLayer = L.geoJSON(projectArea, {
