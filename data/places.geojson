@@ -1,0 +1,30 @@
+var places = {
+"type": "FeatureCollection",
+"name": "places",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "NAME": "Landau in der Pfalz", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.120965248549945, 49.19996354306658 ] } },
+{ "type": "Feature", "properties": { "NAME": "Baden-Baden", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.239935185522851, 48.761343649782098 ] } },
+{ "type": "Feature", "properties": { "NAME": "Karlsruhe", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 8.391250589632849, 49.007498281846978 ] } },
+{ "type": "Feature", "properties": { "NAME": "Freiburg im Breisgau", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.848776338483407, 47.993015876940852 ] } },
+{ "type": "Feature", "properties": { "NAME": "Colmar", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.358081614026338, 48.077412557753462 ] } },
+{ "type": "Feature", "properties": { "NAME": "Sélestat", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.453696504292999, 48.258748802325236 ] } },
+{ "type": "Feature", "properties": { "NAME": "Strasbourg", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.745515165061105, 48.583181391332467 ] } },
+{ "type": "Feature", "properties": { "NAME": "Haguenau \/ Bischwiller", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.79061543911414, 48.815817930053846 ] } },
+{ "type": "Feature", "properties": { "NAME": "Offenburg", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.945193222473501, 48.471572471525448 ] } },
+{ "type": "Feature", "properties": { "NAME": "Mulhouse", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.338011263246661, 47.747705352955712 ] } },
+{ "type": "Feature", "properties": { "NAME": "Guebwiller", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.21107288341984, 47.911315985247462 ] } },
+{ "type": "Feature", "properties": { "NAME": "Emmendingen", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.850587394431407, 48.118029278206635 ] } },
+{ "type": "Feature", "properties": { "NAME": "Solothurn", "NUTS0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.537350978358433, 47.207039505587005 ] } },
+{ "type": "Feature", "properties": { "NAME": "Basel", "NUTS0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.588532585475525, 47.555771473492428 ] } },
+{ "type": "Feature", "properties": { "NAME": "Liestal", "NUTS0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.734853343872216, 47.483695436307443 ] } },
+{ "type": "Feature", "properties": { "NAME": "Aarau", "NUTS0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 8.044452007645033, 47.392276914321172 ] } },
+{ "type": "Feature", "properties": { "NAME": "Delémont", "NUTS0": "CHE" }, "geometry": { "type": "Point", "coordinates": [ 7.347353631298517, 47.363972291493454 ] } },
+{ "type": "Feature", "properties": { "NAME": "Lörrach \/ Weil a. Rh.", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.661226852584556, 47.612140024215506 ] } },
+{ "type": "Feature", "properties": { "NAME": "Wissembourg", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.945555661267009, 49.033722995523355 ] } },
+{ "type": "Feature", "properties": { "NAME": "Dahn", "NUTS0": "DEU" }, "geometry": { "type": "Point", "coordinates": [ 7.779091765447676, 49.150793400290503 ] } },
+{ "type": "Feature", "properties": { "NAME": "Thann", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.099943909877277, 47.812278272941342 ] } },
+{ "type": "Feature", "properties": { "NAME": "Ribeauvillé", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.325232117862251, 48.192816367844671 ] } },
+{ "type": "Feature", "properties": { "NAME": "Molsheim", "NUTS0": "FRA" }, "geometry": { "type": "Point", "coordinates": [ 7.492489222370757, 48.540275300958292 ] } }
+]
+}

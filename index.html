@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    <!-- head is setting page metadata and loading javascript libraries -->
+    <head>
+        <meta charset="utf-8">
+        <title>map example</title>
+
+        <!-- 
+            All of these javascript libaries are  loaded as the website is 'opened'
+            It is also possible to download them and store them locally.
+        -->
+        <!-- 
+            load JQuery for building simple functionality. It is highly recommended to switch 
+            to React or Angular in production here.
+        -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- load the leaflet stylsheet (stylings of the map) -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+        <!-- load the leaflet script (the mapping library) -->
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+        
+        
+        <!-- 
+            This is the dirty part for quick development
+            --------------------------------------------
+            If served from a webserver like apache2 or nginx, we can make a AJAX request 
+            to load data asynchonously, but this is not possible for local files. 
+            You can export the layer in QGIS as geojson and then add 
+            e.g.
+            var places = {...}
+            inside the file, in front of the object in the file.
+        -->
+        <script src="data/places.geojson" type="text/javascript"></script>
+        <script src="data/project_area.geojson" type="text/javascript"></script>
+        <script src="data/rhine.geojson" type="text/javascript"></script>
+        <script src="data/rivers.geojson" type="text/javascript"></script>
+        <script src="data/countries.geojson" type="text/javascript"></script>
+
+        <!-- In production this should go into a css file of its own-->
+        <style>
+            html, body {
+                height: 100%;
+                margin: 0;
+            }
+            /* Here, you can change the size of the map */
+            #map {
+                width: 100%;
+                height: 100%;
+            }
+            /* This is needed to style the text-labels */
+            .text-label {
+                background-color: transparent;
+                border: transparent;
+                box-shadow: none;
+            }
+            /* these are the stylings for the brand */
+            #brand img {
+                height: 30px;
+                z-index: 999;
+            }
+            #brand {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                z-index: 999;
+                padding: 5px 25px;
+                border-radius: 0px 5px 0px 0px;
+            }
+            #brand:hover {
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+        </style>
+    </head>
+
+    <!-- body is the actual website -->
+    <body>
+        <!-- this is where the map goes -->
+        <div id="map"></div>
+        <!-- This is our logo, would be nice if you keep it. -->
+        <div id="brand"><a href="https://hydrocode.de" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/hydrocode-website.appspot.com/o/public%2Fhydrocode_brand.png?alt=media&token=3ec35465-9c1c-48a1-8d3f-2c93549a4ffb"></a></div>
+
+<!-- 
+    This is a special javascript. While it is also possible to load it from a file 
+    in the head, it's more common to place it as the last HTML tag inside the body.
+    The reason is that it will be the LAST element added to the DOM and directly 
+    executed. This assures, that everything else is loaded.
+
+    In production, this should go into a .js file
+-->
+<script type="text/javascript">
+    // find more available base-maps at: https://leaflet-extras.github.io/leaflet-providers/preview/
+    // these are the base-maps that are served from other providers
+    var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	    maxZoom: 17,
+	    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    });
+    var TerrainBackground = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png', {
+	    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	    subdomains: 'abcd',
+	    minZoom: 0,
+	    maxZoom: 18,
+        opacity: 0.5
+    });
+
+    // create custom marker style for the cities
+    var markerOptions = {
+        radius: 6,
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    // build the first Layer
+    // this looks a bit wild but is basically creating a circle 
+    // marker for each location and binding a permanent tooltip 
+    // as a label
+    var placeLayer = L.geoJSON(places, {
+        pointToLayer: (feature, latlng) => {
+            return L.circleMarker(latlng, markerOptions)
+                .bindTooltip(feature.properties.NAME, {
+                    permanent: true,
+                    direction: "center",
+                    className: "text-label",
+                    offset: [0, 12]
+                }).openTooltip();
+        }
+    });
+    // project area -> this is quite big and slowing down
+    var regionLayer = L.geoJSON(projectArea, {
+        style: {
+            color: "#dc1248",
+            fillColor: "#dc1248",
+            weight: 2,
+            fillOpacity: 0.0
+        }
+    });
+    // The Rhine only
+    var rhineLayer = L.geoJSON(rhine, {
+        style: {
+            color: "#00f",
+            weight: 3
+        }
+    });
+    // the three countries in the area
+    // here you can see, how we can define different styles depending on 
+    // the properties of a feature
+    var countryLayer = L.geoJSON(countries, {
+        style: feature => {
+            switch (feature.properties.NUTS0) {
+                case 'FRA': return {color: null, fillColor: "#d0a657", fillOpacity: 0.379};
+                case 'DEU': return {color: null, fillColor: "#69db7a", fillOpacity: 0.379};
+                case 'CHE': return {color: null, fillColor: "#ee91e0", fillOpacity: 0.379};
+            }
+        }
+    });
+
+    // As there are no 'Project data' so far, we assume that the small rivers are project
+    // data that needs to be toggled on and off. 
+    var riverLayer = L.geoJSON(rivers, {
+        style: {
+            color: "#00f",
+            opacity: 0.8,
+            weight: 0.8
+        }
+    });
+
+    // collect everything for the base information
+    // this is a self-build project basemap
+    projectBaseGroup = L.layerGroup([TerrainBackground, countryLayer, rhineLayer, regionLayer,  placeLayer]);
+    
+    // build the map and render
+    var m = L.map('map', {
+        center: [48.1129, 7.7206],
+        zoom: 8,
+        layers: [projectBaseGroup, riverLayer]
+    });
+
+    /*
+        to generate a layerControl, you can collect base maps and overlays.
+        The difference is that only one base-map can be active, but each 
+        overlay can be switched on/off individually.
+     */
+    var baseMaps = {
+        "Open Topo Map": OpenTopoMap,
+//        "Terrain": TerrainBackground,
+        "Rhine region": projectBaseGroup
+    };
+    // this is where you would put the real project data
+    var overlayMaps = {
+        "Small rivers": riverLayer
+    };
+
+    /*
+        Note: usually, you would put a number of elements
+        into the application. Like a toolbar-menu that contains 
+        Filters, Tools, whatsoever. These can call methods added here, 
+        that will e.g. change all the globally available layers above 
+        and place them back to the map.
+    */
+
+    // add to the map
+    L.control.layers(baseMaps, overlayMaps).addTo(m);
+
+</script>
+    </body>
+</html>
