@@ -35,7 +35,7 @@
         <script src="data/rhine.geojson" type="text/javascript"></script>
         <script src="data/rivers.geojson" type="text/javascript"></script>
         <script src="data/countries.geojson" type="text/javascript"></script>
-	<script src="data/Gemeindezentren.geojson" type="text/javascript"></script>    
+	<script src="data/gemeindezentren.geojson" type="text/javascript"></script>    
 
         <!-- In production this should go into a css file of its own-->
         <style>
@@ -168,7 +168,7 @@
         }
     });
 
-    var gemeindenLayer = L.geoJSON(Gemeindezentren, {
+    var gemeindenLayer = L.geoJSON(gemeindezentren, {
         style: {
             color: "#00f",
             opacity: 0.8,
