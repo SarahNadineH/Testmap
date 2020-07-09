@@ -36,9 +36,6 @@
         <script src="data/rivers.geojson" type="text/javascript"></script>
         <script src="data/countries.geojson" type="text/javascript"></script>
 	<script src="data/Gemeindezentren.geojson" type="text/javascript"></script>
-	<script src="data/Deutschalnd.geojson" type="text/javascript"></script>
-	<script src="data/Schweiz.geojson" type="text/javascript"></script>
-	<script src="data/France.geojson" type="text/javascript"></script>
 
         <!-- In production this should go into a css file of its own-->
         <style>
@@ -172,10 +169,11 @@
     });
 	
     var gemeindeLayer = L.geoJSON(Gemeindezentren, {
-	    style: { color: "#00f",
-            opacity: 0.8,
-            weight: 0.8
-		   }
+	    style: { 
+		color: "#00f",
+           	opacity: 0.8,
+            	weight: 0.8
+	}
     });
 
     // collect everything for the base information
