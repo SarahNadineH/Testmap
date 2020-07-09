@@ -35,6 +35,7 @@
         <script src="data/rhine.geojson" type="text/javascript"></script>
         <script src="data/rivers.geojson" type="text/javascript"></script>
         <script src="data/countries.geojson" type="text/javascript"></script>
+	<script src="data/Gemeindezentren.geojson" type="text/javascript"></script>    
 
         <!-- In production this should go into a css file of its own-->
         <style>
@@ -167,6 +168,14 @@
         }
     });
 
+    var gemeindenLayer = L.geoJSON(Gemeindezentren, {
+        style: {
+            color: "#00f",
+            opacity: 0.8,
+            weight: 0.8
+        }
+    });
+
     // collect everything for the base information
     // this is a self-build project basemap
     projectBaseGroup = L.layerGroup([TerrainBackground, countryLayer, rhineLayer, regionLayer,  placeLayer]);
@@ -175,7 +184,7 @@
     var m = L.map('map', {
         center: [48.1129, 7.7206],
         zoom: 8,
-        layers: [projectBaseGroup, riverLayer]
+        layers: [projectBaseGroup, riverLayer, gemeindenLayer]
     });
 
     /*
@@ -191,6 +200,10 @@
     // this is where you would put the real project data
     var overlayMaps = {
         "Small rivers": riverLayer
+    };
+	
+    var overlayMaps = {
+        "Gemeinden": gemeindenLayer
     };
 
     /*
