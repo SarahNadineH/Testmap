@@ -178,13 +178,13 @@
 
     // collect everything for the base information
     // this is a self-build project basemap
-    projectBaseGroup = L.layerGroup([TerrainBackground, countryLayer, rhineLayer, regionLayer,  placeLayer, gemeindenLayer]);
+    projectBaseGroup = L.layerGroup([TerrainBackground, countryLayer, rhineLayer, regionLayer,  placeLayer]);
     
     // build the map and render
     var m = L.map('map', {
         center: [48.1129, 7.7206],
         zoom: 8,
-        layers: [projectBaseGroup, riverLayer]
+        layers: [projectBaseGroup, gemeindenLayer]
     });
 
     /*
@@ -199,7 +199,7 @@
     };
     // this is where you would put the real project data
     var overlayMaps = {
-        "Small rivers": riverLayer
+        "Gemeindezentren": gemeindenLayer
     };
 
     /*
