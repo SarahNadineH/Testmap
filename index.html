@@ -217,6 +217,11 @@
     // add to the map
     L.control.layers(baseMaps, overlayMaps).addTo(m);
 
+    // add Pop-up to map
+    L.marker([51.5, -0.09]).addTo(m)
+    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+    .openPopup();
+
 </script>
     </body>
 </html>
