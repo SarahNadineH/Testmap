@@ -218,9 +218,10 @@
     L.control.layers(baseMaps, overlayMaps).addTo(m);
 
     // add Pop-up to map
-    L.marker([51.5, -0.09]).addTo(m)
-    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-    .openPopup();
+   var myMarker= L.marker([47.9990077, 7.8421043]);
+   myMarker.addTo(m);
+   myMarker.bindPopup('<b> Beispielbild </b><div><img scr="data/bild" alt="image"/></div>'
+   );
 
 </script>
     </body>
