@@ -70,8 +70,23 @@
             #brand:hover {
                 background-color: rgba(255, 255, 255, 0.8);
             }
+	   #legend {
+       		 font-family: Arial, sans-serif;
+       		 background: #fff;
+       		 padding: 10px;
+       		 margin: 10px;
+       		 border: 3px solid #000;
+      	   }
+      	   #legend h3 {
+       		 margin-top: 0;
+      	   }
+           #legend img {
+      		  vertical-align: middle;
+     	   }
+	
         </style>
     </head>
+      
 
     <!-- body is the actual website -->
     <body>
@@ -79,6 +94,7 @@
         <div id="map"></div>
         <!-- This is our logo, would be nice if you keep it. -->
         <div id="brand"><a href="https://hydrocode.de" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/hydrocode-website.appspot.com/o/public%2Fhydrocode_brand.png?alt=media&token=3ec35465-9c1c-48a1-8d3f-2c93549a4ffb"></a></div>
+	<div id="legend"><h3>Legend</h3></div>
 
 <!-- 
     This is a special javascript. While it is also possible to load it from a file 
@@ -224,24 +240,14 @@
    );
 
    #Add Legend	
-   var legend = L.control({position: 'bottomright'});
-
-   legend.onAdd = function (m) {
-
-    var div = L.DomUtil.create('div', 'info legend'),
-    grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-    labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-
-    return div;
-    };
-    legend.addTo(m);
+   var layerList = new LayerList({
+   	view: view,
+   });
+	
+  // Adds widget below other elements in the top left corner of the view
+  view.ui.add(layerList, {
+	  position: "top-left"
+   });
 
 </script>
     </body>
