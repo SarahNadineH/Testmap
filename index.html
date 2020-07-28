@@ -43,6 +43,22 @@
                 margin: 0;
             }
             /* Here, you can change the size of the map */
+		
+	    .header{
+                width: 100%;
+                height:80px;
+                display: block;
+		background-color: #101010;
+		}
+	    .logo_container{ 
+                height: 100%;
+                display: table;
+                float: left;
+            }
+	    .logo_container img{
+                display: all;
+            }
+		
             #map {
                 width: 100%;
                 height: 80%;
@@ -69,32 +85,9 @@
             #brand:hover {
                 background-color: rgba(255, 255, 255, 0.8);
             }
-
-            .header {
-		postion: top;
-                padding: 20px; /* some padding */
-                text-align: center; /* center the text */
-                background: #1abc9c; /* green background */
-                color: white; /* white text color */
-            }
-
-            /* Increase the font size of the <h1> element */
-            .header h1 {
-                font-size: 40px;
-            }
 		
-	    #logo img{
-		    height: 30px;
-		    z-index: 999;
-	    }
-	    #logo {
-		   position: fixed;
-                   top: 0px;
-               	   left: 0px;
-               	   z-index: 999;
-                   padding: 5px 25px;
-                   border-radius: 0px 5px 0px 0px;
-            } 
+	   
+            
 
         </style>
     </head>
@@ -109,10 +102,11 @@
         <div class="header">
             <h1>My Website</h1>
             <p>A website created by me.</p>
+		<div class="logo_container">
+                        <img scr="data/logo.png" width="200" height="200">
+                    </div>
         </div> 
-	<div id="logo">
-            <img scr="data/logo.png">
-        </div>
+	
 <!-- 
     This is a special javascript. While it is also possible to load it from a file 
     in the head, it's more common to place it as the last HTML tag inside the body.
