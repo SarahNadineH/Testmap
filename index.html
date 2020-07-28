@@ -35,7 +35,6 @@
         <script src="data/rhine.geojson" type="text/javascript"></script>
         <script src="data/rivers.geojson" type="text/javascript"></script>
         <script src="data/countries.geojson" type="text/javascript"></script>
-	<script src="data/Gemeindezentren.geojson" type="text/javascript"></script>
 
         <!-- In production this should go into a css file of its own-->
         <style>
@@ -46,7 +45,7 @@
             /* Here, you can change the size of the map */
             #map {
                 width: 100%;
-                height: 100%;
+                height: 80%;
             }
             /* This is needed to style the text-labels */
             .text-label {
@@ -72,6 +71,7 @@
             }
 
             .header {
+		postion: top;
                 padding: 20px; /* some padding */
                 text-align: center; /* center the text */
                 background: #1abc9c; /* green background */
@@ -82,6 +82,12 @@
             .header h1 {
                 font-size: 40px;
             }
+	    .logo {
+                  float:left;
+                  width:65px;
+                  height:65px;
+                  margin:4px;
+                }
 
         </style>
     </head>
@@ -97,6 +103,9 @@
             <h1>My Website</h1>
             <p>A website created by me.</p>
         </div> 
+	<div class="logo">
+            <img scr="data/logo.png">
+        </div>
 <!-- 
     This is a special javascript. While it is also possible to load it from a file 
     in the head, it's more common to place it as the last HTML tag inside the body.
@@ -185,13 +194,6 @@
         }
     });
 	
-    var gemeindenLayer = L.geoJSON(Gemeindezentren, {
-        style: {
-            color: "#00f",
-            opacity: 0.8,
-            weight: 0.8
-        }
-    });
 
     // collect everything for the base information
     // this is a self-build project basemap
