@@ -82,12 +82,19 @@
             .header h1 {
                 font-size: 40px;
             }
-	    .logo {
-                  float:left;
-                  width:65px;
-                  height:65px;
-                  margin:4px;
-                }
+		
+	    #logo img{
+		    height: 30px;
+		    z-index: 999;
+	    }
+	    #logo {
+		   position: fixed;
+                   top: 0px;
+               	   left: 0px;
+               	   z-index: 999;
+                   padding: 5px 25px;
+                   border-radius: 0px 5px 0px 0px;
+            } 
 
         </style>
     </head>
@@ -103,7 +110,7 @@
             <h1>My Website</h1>
             <p>A website created by me.</p>
         </div> 
-	<div class="logo">
+	<div id="logo">
             <img scr="data/logo.png">
         </div>
 <!-- 
