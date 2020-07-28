@@ -35,7 +35,7 @@
         <script src="data/rhine.geojson" type="text/javascript"></script>
         <script src="data/rivers.geojson" type="text/javascript"></script>
         <script src="data/countries.geojson" type="text/javascript"></script>
-	<script src="data/gemeindezentren.geojson" type="text/javascript"></script>    
+	<script src="data/Gemeindezentren.geojson" type="text/javascript"></script>
 
         <!-- In production this should go into a css file of its own-->
         <style>
@@ -70,23 +70,21 @@
             #brand:hover {
                 background-color: rgba(255, 255, 255, 0.8);
             }
-	   #legend {
-       		 font-family: Arial, sans-serif;
-       		 background: #fff;
-       		 padding: 10px;
-       		 margin: 10px;
-       		 border: 3px solid #000;
-      	   }
-      	   #legend h3 {
-       		 margin-top: 0;
-      	   }
-           #legend img {
-      		  vertical-align: middle;
-     	   }
-	
+
+            .header {
+                padding: 20px; /* some padding */
+                text-align: center; /* center the text */
+                background: #1abc9c; /* green background */
+                color: white; /* white text color */
+            }
+
+            /* Increase the font size of the <h1> element */
+            .header h1 {
+                font-size: 40px;
+            }
+
         </style>
     </head>
-      
 
     <!-- body is the actual website -->
     <body>
@@ -94,8 +92,11 @@
         <div id="map"></div>
         <!-- This is our logo, would be nice if you keep it. -->
         <div id="brand"><a href="https://hydrocode.de" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/hydrocode-website.appspot.com/o/public%2Fhydrocode_brand.png?alt=media&token=3ec35465-9c1c-48a1-8d3f-2c93549a4ffb"></a></div>
-	<div id="legend"><h3>Legend</h3></div>
 
+        <div class="header">
+            <h1>My Website</h1>
+            <p>A website created by me.</p>
+        </div> 
 <!-- 
     This is a special javascript. While it is also possible to load it from a file 
     in the head, it's more common to place it as the last HTML tag inside the body.
@@ -108,14 +109,14 @@
     // find more available base-maps at: https://leaflet-extras.github.io/leaflet-providers/preview/
     // these are the base-maps that are served from other providers
     var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-	    maxZoom: 10,
+	    maxZoom: 17,
 	    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
     });
     var TerrainBackground = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png', {
 	    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 	    subdomains: 'abcd',
 	    minZoom: 0,
-	    maxZoom: 10,
+	    maxZoom: 18,
         opacity: 0.5
     });
 
@@ -183,14 +184,14 @@
             weight: 0.8
         }
     });
-
-    #var gemeindenLayer = L.geoJSON(gemeindezentren, {
-    #    style: {
-    #        color: "#00f",
-    #        opacity: 0.8,
-    #        weight: 0.8
-    #    }
-    #});
+	
+    var gemeindenLayer = L.geoJSON(Gemeindezentren, {
+        style: {
+            color: "#00f",
+            opacity: 0.8,
+            weight: 0.8
+        }
+    });
 
     // collect everything for the base information
     // this is a self-build project basemap
@@ -217,10 +218,6 @@
     var overlayMaps = {
         "Small rivers": riverLayer
     };
-	
-    #var overlayMaps = {
-    #    "Gemeinden": gemeindenLayer
-    # };
 
     /*
         Note: usually, you would put a number of elements
@@ -233,21 +230,6 @@
     // add to the map
     L.control.layers(baseMaps, overlayMaps).addTo(m);
 
-    // add Pop-up to map
-   var myMarker= L.marker([47.9990077, 7.8421043]);
-   myMarker.addTo(m);
-   myMarker.bindPopup('<b> Beispielbild </b><div><img scr="data/bild.jpg" type="image"/></div>'
-   );
-
-   #Add Legend	
-   #var layerList = new LayerList({
-   #	view: view,
-   #});
-	
-  // Adds widget below other elements in the top left corner of the view
-  #view.ui.add(layerList, {
-  #	  position: "top-left"
-  #  });
 
 </script>
     </body>
