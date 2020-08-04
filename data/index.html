@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!--Eingangspaket von qgis2web erstellt und geladen -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <!--Hinzugefügte .css und .js Dateinen für das Icon mit dem Default-Extent -->
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <link rel="stylesheet" href="leaflet.defaultextent.css" />
+        <link rel="stylesheet" href="demo.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!--Hinzugefügte Pakete und leaflet Libraries für die Erstellung des Massstabs (BetterScale)-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0/leaflet.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0/leaflet.js"></script>
+        <link rel="stylesheet" href="L.Control.BetterScale.css" />
+        <script src="L.Control.BetterScale.js"></script>
+        <!--Funktion Groupedlayercontroll aktiviet um Legende zu bearbeiten s.h. line:    -->
+        <link rel="stylesheet" href="../css/leaflet.groupedlayercontrol.css" />
+
+        <!--Hier beginnt der Style-teil des Scripts, dieser wird normalerweise größtentiels als .css Dateien ausgelagert. Hier sind beispielshaft einige .css Files ausgeschrieben-->
+        <style>
+        html, body, #map { /* Legt die Maße für die Karte an */
+            width: 100%;
+            overflow: hidden;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            }
+            /* Hier wird die Gestaltungs des Headers vorgenommen, mit zugehörigenm Schriftteil "a" und "h3"*/
+            .header {
+                top: 0;
+                left: 0;
+                right: 0;
+                padding: 2px; /* some padding */
+                height: 66px;
+                opacity: 0.9;
+                text-align: left; /* left side the text */
+                background: Teal; /* green background */
+                color: #F5FFFA; /* white text color */
+            }
+            .header a {
+                  float: left;
+                  text-align: left;
+                  padding: 8px;
+                  display: inline-block;
+            }
+            /* Increase the font size of the <h1> element */
+            .header h3 {
+                font-size: 23px;
+                font-family: sans-serif;
+                font-style: italic;
+                display: inline-block;
+            }
+            /* Hier  wird die Gestaltung des Massstabs erstellt, mit den einzelnen schwarzen und weißen Teilen, sowie Beschriftung*/
+            .leaflet-control-better-scale {
+               height: 15px;
+            }
+              .leaflet-control-better-scale {
+              height: 15px;
+            }
+            .leaflet-control-better-scale-upper-first-piece {
+                top: 0%;
+                left: 0%;
+                width: 25%;
+            }
+            .leaflet-control-better-scale-upper-second-piece {
+                top: 0%;
+                left: 50%;
+                width: 25%;
+            }
+            .leaflet-control-better-scale-lower-first-piece {
+                top: 50%;
+                left: 25%;
+                width: 25%;
+            }
+            .leaflet-control-better-scale-lower-second-piece {
+                top: 50%;
+                left: 75%;
+                width: 30%;
+            }
+            .leaflet-control-better-scale-ruler-block {
+                overflow: hidden;
+                position: absolute;
+                height: 50%;
+                background-color: #444444;
+            }
+            .leaflet-control-better-scale-ruler {
+                overflow: hidden;
+                position: relative;
+                width: 100%;
+                height: 7px;
+                background-color: White;
+                border: 1px solid #444444;
+            }
+            .leaflet-control-better-scale-label-div {
+                position: relative;
+                width: 100%;   
+            }
+            .leaflet-control-better-scale-label {
+                position: absolute;
+                width: 10%;
+                text-align: center;
+                color: #fff;
+                font: sans-serif;
+                font-weight: bold;
+                font-size: 12px;
+                height: 5px;
+                top: -1px;
+                 text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+            }
+            .leaflet-control-better-scale-first-number {
+                left: 45%;
+            }
+            .leaflet-control-better-scale-second-number {
+                left: 95%;
+            }
+            /*Hier wird das Fenter des "Dowload-Button" erstellt. Dabei handelt es sich um ein Modal-Feld, das ein- und ausschaltbar ist. Es bestehlt aus: dem Modal Fenster, dem Inhalt, dem Close-Button, der Reaktion des Buttons auf die Maus(hover)*/
+            .modal {
+              display: none; /* Hidden by default */
+              position: relative; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 10px; /* Location of the box */
+              width: 100%; /* Full width */
+              height: 15%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: CadetBlue;
+              } 
+            .modal-content {
+                background-color: #fefefe;
+                margin: auto;
+                padding: 20px;
+                border: 2px solid #888;
+                width: 97%;
+                position: "topright";
+                z-index: 1;
+            }
+            .close {
+                color: red;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .myModal{
+                display: all;
+            }
+            .myBtn:hover,
+            .myBtn:focus{
+                polor: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
+
+<!-- Hier endet der Style-Teil. Es wird der Tiel erstellt. Dieser wird im Web-Browser im Tab angezeigt.-->        
+    <title>🌍Testmap  for SMI</title> 
+
+<!--  Hier endet der Head-Teil. Es beginnt der Body mit dem Code-Teil der meistens in .js Dateinen abgelegt wird. Dieser werden über den "scr" Befehl geladen. Zusätzlich müssen außerdem noch <div> erstellt werden um auf Objekte zugreifen zu können. Ein div kann an jeder Stelle wieder aufgerufen werden und schafft die "class" die Verbeindung zum Style-Teil.
+-->
+    </head>
+    <body>
+    
+        <div class="header"> <!-- Die class header ist un für den Inhalt verantworlich, der im Style-Teil formatiert wurde. -->
+            <div id="logo">
+                <a href="https://de.wikipedia.org/wiki/Die_Welt" target="_blank"><img src="https://cdn.pixabay.com/photo/2016/04/02/21/01/world-1303628_960_720.png" width="45" height="45"></a>
+            </div> <!--href erzeugt einen Hyperlink zu einer Website, welcher auf den Platzhalter "img" gelegt wird. Über scr wird die Bild-Datei geladen und direkt über "width" und "height" zugeschnitten.-->
+            <h3>Testmap for SMI Project <!--Hier stehlt der Titel des Headers-->
+                            <button id="myBtn" >Downloads</button></h3> <!--Dieser Button öffnet das Modal-Feld -->
+        </div>
+       
+        <div id="myModal" class="modal"> <!-- Das Modal-Feld wird erzeugt. Wie zuvor im Header werden hier Text, Links mit Bildern oder etc. eingfügt.--> 
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                    <p>Hier können Informationen zur Benzutung der Seite stehen. Oder es könnten an dieser Stelle Downloadlinks eingefügt werden.<br/>
+                    <a href="https://github.com/SarahNadineH/Testmap" target="_blank"><img src="https://banner2.cleanpng.com/20180709/lgb/kisspng-computer-icons-download-github-clip-art-github-icon-5b44289596fd85.7749119715311934936185.jpg" width="15" height="15"></a> Link zu Github <br/>
+                    <a href="https://github.com/SarahNadineH/Testmap" target="_blank"><img src="https://banner2.cleanpng.com/20180709/lgb/kisspng-computer-icons-download-github-clip-art-github-icon-5b44289596fd85.7749119715311934936185.jpg" width="15" height="15"></a> Städte-Layer als geoJSON <br/>
+                    <a href="https://github.com/SarahNadineH/Testmap" target="_blank"><img src="https://banner2.cleanpng.com/20180709/lgb/kisspng-computer-icons-download-github-clip-art-github-icon-5b44289596fd85.7749119715311934936185.jpg" width="15" height="15"></a> Flüsse-Layer als geoJSON <br/>
+            </div>
+        </div>
+
+        <!--Im "script" befinden sich die .js Daten. Hier die Variablen um das Modal-Feld bei Anklicken schließen und öffnen zu können. Es wird dabei auf die IDs myModal und myBtn sowie die class=close zugegriffen.-->
+        <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+         span.onclick = function() {
+          modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            }
+            }
+        </script>
+
+        <!-- Hier beginnt der wichte Teil der Web-GIS Gestalltung: das Laden der in QGIS erstellten Layer und Expresssions (in qgis2web ausgesucht). Diese ligen im .js Datei-Format vor und können deshalb hier direkt geladen werden. Diese werden mit der Ordner-Strukter von qgis2web erstellt. -->
+        <div id="map"> <!--Ganz wichtig: Zuerst einmal muss die div für die id= map erstellt werden-->
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/Schweiz_1.js"></script>
+        <script src="data/Deutschland_2.js"></script>
+        <script src="data/Frankreich_3.js"></script>
+        <script src="data/Flsse_4.js"></script>
+        <script src="data/DerRhein_5.js"></script>
+        <script src="data/Stdte_6.js"></script>
+
+
+    <!--Hier als Beispiel die Funktionen für das Karten Widget: DefaultExtent. Mit eigenem Icon.-->
+        <script>
+          (function(root, factory) {
+            if (typeof define === 'function' && define.amd) {
+              define(["leaflet"], factory);
+            } else if (typeof exports === 'object') {
+              module.exports = factory(require('leaflet'));
+            } else {
+              root.L.Control.DefaultExtent = factory(root.L);
+            }
+          }(this, function(L) {
+
+          return (function () {
+            /* global L */
+            'use strict';
+            L.Control.DefaultExtent = L.Control.extend({
+              options: {
+                position: 'topleft', /* Position des Widgets */
+                text: 'Default Extent',
+                title: 'Zoomt auf den Default-Extent',
+                className: 'leaflet-control-defaultextent'
+              },
+              onAdd: function (map) {
+                this._map = map;
+                return this._initLayout();
+              },
+              setCenter: function (center) {
+                this._center = center;
+                return this;
+              },
+              setZoom: function (zoom) {
+                this._zoom = zoom;
+                return this;
+              },
+              _initLayout: function () {
+                var container = L.DomUtil.create('div', 'leaflet-bar ' +
+                  this.options.className);
+                this._container = container;
+                this._fullExtentButton = this._createExtentButton(container);
+
+                L.DomEvent.disableClickPropagation(container);
+
+                this._map.whenReady(this._whenReady, this);
+
+                return this._container;
+              },
+              _createExtentButton: function () {
+                var link = L.DomUtil.create('a', this.options.className + '-toggle',
+                  this._container);
+                link.href = '#';
+                link.innerHTML = this.options.text;
+                link.title = this.options.title;
+
+                L.DomEvent
+                  .on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
+                  .on(link, 'click', L.DomEvent.stop)
+                  .on(link, 'click', this._zoomToDefault, this);
+                return link;
+              },
+              _whenReady: function () {
+                if (!this._center) {
+                  this._center = this._map.getCenter();
+                }
+                if (!this._zoom) {
+                  this._zoom = this._map.getZoom();
+                }
+                return this;
+              },
+              _zoomToDefault: function () {
+                this._map.setView(this._center, this._zoom);
+              }
+            });
+
+            L.Map.addInitHook(function () {
+              if (this.options.defaultExtentControl) {
+                this.addControl(new L.Control.DefaultExtent());
+              }
+            });
+
+            L.control.defaultExtent = function (options) {
+              return new L.Control.DefaultExtent(options);
+            };
+
+            return L.Control.DefaultExtent;
+
+          }());
+          ;
+
+          }));
+        </script>
+
+<!-- Hier wird die Funktion für den Massstab BetterScale erstellt
+-->
+        <script>
+            L.Control.BetterScale = L.Control.extend({
+            options: {
+                position: "topleft",
+                maxWidth: 150,
+                metric: !0,
+                imperial: !1,
+                updateWhenIdle: !1
+            },
+            onAdd: function (t) {
+                this._map = t;
+                var e = "leaflet-control-better-scale",
+                    i = L.DomUtil.create("div", e),
+                    n = this.options,
+                    s = L.DomUtil.create("div", e + "-ruler", i);
+                L.DomUtil.create("div", e + "-ruler-block " + e + "-upper-first-piece", s), L.DomUtil.create("div", e + "-ruler-block " + e + "-upper-second-piece", s), L.DomUtil.create("div", e + "-ruler-block " + e + "-lower-first-piece", s), L.DomUtil.create("div", e + "-ruler-block " + e + "-lower-second-piece", s);
+                return this._addScales(n, e, i), this.ScaleContainer = i, t.on(n.updateWhenIdle ? "moveend" : "move", this._update, this), t.whenReady(this._update, this), i
+            },
+            onRemove: function (t) {
+                t.off(this.options.updateWhenIdle ? "moveend" : "move", this._update, this)
+            },
+            _addScales: function (t, e, i) {
+                this._iScale = L.DomUtil.create("div", e + "-label-div", i), this._iScaleLabel = L.DomUtil.create("div", e + "-label", this._iScale), this._iScaleFirstNumber = L.DomUtil.create("div", e + "-label " + e + "-first-number", this._iScale), this._iScaleSecondNumber = L.DomUtil.create("div", e + "-label " + e + "-second-number", this._iScale)
+            },
+            _update: function () {
+                var t = this._map.getBounds(),
+                    e = t.getCenter().lat,
+                    i = 6378137 * Math.PI * Math.cos(e * Math.PI / 180),
+                    n = i * (t.getNorthEast().lng - t.getSouthWest().lng) / 180,
+                    o = this._map.getSize(),
+                    s = this.options,
+                    a = 0;
+                o.x > 0 && (a = n * (s.maxWidth / o.x)), this._updateScales(s, a)
+            },
+            _updateScales: function (t, e) {
+                t.metric && e && this._updateMetric(e), t.imperial && e && this._updateImperial(e)
+            },
+            _updateMetric_old: function (t) {
+                var e = this._getRoundNum(t);
+                this._iScale.style.width = this._getScaleWidth(e / t) + "px", this._iScaleLabel.innerHTML = 1e3 > e ? e + " m" : e / 1e3 + " km"
+            },
+            _updateMetric: function (t) {
+                var e, i, n, o, s, a = t,
+                    r = this._iScaleFirstNumber,
+                    h = this._iScaleSecondNumber,
+                    l = this._iScale,
+                    u = this._iScaleLabel;
+                u.innerHTML = "0", a > 500 ? (e = a / 1000, i = this._getRoundNum(e), o = this._getRoundNum(e / 2), l.style.width = this._getScaleWidth(i / e) + "px", r.innerHTML = o, h.innerHTML = i + "km") : (n = this._getRoundNum(a), s = this._getRoundNum(a / 2), l.style.width = this._getScaleWidth(n / a) + "px", r.innerHTML = s, h.innerHTML = n + "m")
+            },
+            _updateImperial: function (t) {
+                var e, i, n, o, s, a = 3.2808399 * t,
+                    r = this._iScaleFirstNumber,
+                    h = this._iScaleSecondNumber,
+                    l = this._iScale,
+                    u = this._iScaleLabel;
+                u.innerHTML = "0", a > 2640 ? (e = a / 5280, i = this._getRoundNum(e), o = this._getRoundNum(e / 2), l.style.width = this._getScaleWidth(i / e) + "px", r.innerHTML = o, h.innerHTML = i + "mi") : (n = this._getRoundNum(a), s = this._getRoundNum(a / 2), l.style.width = this._getScaleWidth(n / a) + "px", r.innerHTML = s, h.innerHTML = n + "ft")
+            },
+            _getScaleWidth: function (t) {
+                return Math.round(this.options.maxWidth * t) - 10
+            },
+            _getRoundNum: function (t) {
+                if (t >= 2) {
+                    var e = Math.pow(10, (Math.floor(t) + "").length - 1),
+                        i = t / e;
+                    return i = i >= 10 ? 10 : i >= 5 ? 5 : i >= 3 ? 3 : i >= 2 ? 2 : 1, e * i
+                }
+                return (Math.round(100 * t) / 100).toFixed(1)
+            }
+        });
+
+        L.control.betterscale = function (options) {
+            return new L.Control.BetterScale(options)
+        };
+        </script>
+
+
+<!--Hier wird das Script Packet für die Groupedlayercontrol geladen mit der ich die Legende bearbeietet habe
+-->
+        <script src="leaflet.groupedlayercontrol.js"></script>
+
+<!--Hier Wird das Script für die Karten-Erstellung gestartet angefangen mit den Highlight features der Layer
+-->
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
+
+        var mapCenter = [48.1129, 7.7206]; /* setzt dem Default Extent Auschnitt fest*/
+
+        var map = L.map('map', {
+            zoomControl:true, 
+            maxZoom:14, /*sp nah kann man in der Karte ran zoomen*/
+            minZoom:1,
+            defaultExtentControl: true,
+            center: mapCenter,
+        }).setView([48.1129, 7.7206], 8);
+        L.control.betterscale().addTo(map);
+
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_HintergrundkarteOSMStandard_0');
+        map.getPane('pane_HintergrundkarteOSMStandard_0').style.zIndex = 400;
+        var layer_HintergrundkarteOSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_HintergrundkarteOSMStandard_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 14,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+
+
+        layer_HintergrundkarteOSMStandard_0;
+        map.addLayer(layer_HintergrundkarteOSMStandard_0);
+        /* Hier wird er Layer Schweiz eingefügt*/
+        function pop_Schweiz_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Land:</th>\
+                        <td>' + (feature.properties['N0_NAME'] !== null ? autolinker.link(feature.properties['N0_NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Fläche in km2:</th>\
+                        <td>' + (feature.properties['AREA_KM2'] !== null ? autolinker.link(feature.properties['AREA_KM2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Schweiz_1_0() {
+            return {
+                pane: 'pane_Schweiz_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.551)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(163,247,204,0.551)',
+                interactive: true,
+            }
+        }
+        function style_Schweiz_1_1() {
+            return {
+                pane: 'pane_Schweiz_1',
+                opacity: 1,
+                color: 'rgba(5,12,5,0.551)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Schweiz_1');
+        map.getPane('pane_Schweiz_1').style.zIndex = 401;
+        map.getPane('pane_Schweiz_1').style['mix-blend-mode'] = 'normal';
+        var layer_Schweiz_1 = new L.geoJson.multiStyle(json_Schweiz_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Schweiz_1',
+            layerName: 'layer_Schweiz_1',
+            pane: 'pane_Schweiz_1',
+            onEachFeature: pop_Schweiz_1,
+            styles: [style_Schweiz_1_0,style_Schweiz_1_1,]
+        });
+        bounds_group.addLayer(layer_Schweiz_1);
+        map.addLayer(layer_Schweiz_1);
+
+/*Hier wird der Layer Deutschland eingefügt*/
+        function pop_Deutschland_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Land:</th>\
+                        <td>' + (feature.properties['N0_NAME'] !== null ? autolinker.link(feature.properties['N0_NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Fläche in km2:</th>\
+                        <td>' + (feature.properties['AREA_KM2'] !== null ? autolinker.link(feature.properties['AREA_KM2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Deutschland_2_0() {
+            return {
+                pane: 'pane_Deutschland_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.503)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,168,230,0.503)',
+                interactive: true,
+            }
+        }
+        function style_Deutschland_2_1() {
+            return {
+                pane: 'pane_Deutschland_2',
+                opacity: 1,
+                color: 'rgba(11,5,12,0.503)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Deutschland_2');
+        map.getPane('pane_Deutschland_2').style.zIndex = 402;
+        map.getPane('pane_Deutschland_2').style['mix-blend-mode'] = 'normal';
+        var layer_Deutschland_2 = new L.geoJson.multiStyle(json_Deutschland_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Deutschland_2',
+            layerName: 'layer_Deutschland_2',
+            pane: 'pane_Deutschland_2',
+            onEachFeature: pop_Deutschland_2,
+            styles: [style_Deutschland_2_0,style_Deutschland_2_1,]
+        });
+        bounds_group.addLayer(layer_Deutschland_2);
+        map.addLayer(layer_Deutschland_2);
+
+/*Hier wird Frankreich eingefügt*/
+        function pop_Frankreich_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Land:</th>\
+                        <td>' + (feature.properties['N0_NAME'] !== null ? autolinker.link(feature.properties['N0_NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Fläche in km2:</th>\
+                        <td>' + (feature.properties['AREA_KM2'] !== null ? autolinker.link(feature.properties['AREA_KM2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Frankreich_3_0() {
+            return {
+                pane: 'pane_Frankreich_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.503)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(194,237,255,0.503)',
+                interactive: true,
+            }
+        }
+        function style_Frankreich_3_1() {
+            return {
+                pane: 'pane_Frankreich_3',
+                opacity: 1,
+                color: 'rgba(13,11,2,0.503)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Frankreich_3');
+        map.getPane('pane_Frankreich_3').style.zIndex = 403;
+        map.getPane('pane_Frankreich_3').style['mix-blend-mode'] = 'normal';
+        var layer_Frankreich_3 = new L.geoJson.multiStyle(json_Frankreich_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Frankreich_3',
+            layerName: 'layer_Frankreich_3',
+            pane: 'pane_Frankreich_3',
+            onEachFeature: pop_Frankreich_3,
+            styles: [style_Frankreich_3_0,style_Frankreich_3_1,]
+        });
+        bounds_group.addLayer(layer_Frankreich_3);
+        map.addLayer(layer_Frankreich_3);
+
+/*Hier wird er Layer Flüsse eingefügt*/
+        function pop_Flsse_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name:</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Länge in Meter:</th>\
+                        <td>' + (feature.properties['LENGTH_M'] !== null ? autolinker.link(feature.properties['LENGTH_M'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Land:</th>\
+                        <td>' + (feature.properties['NUTS0'] !== null ? autolinker.link(feature.properties['NUTS0'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Flsse_4_0() {
+            return {
+                pane: 'pane_Flsse_4',
+                opacity: 1,
+                color: 'rgba(0,221,255,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Flsse_4');
+        map.getPane('pane_Flsse_4').style.zIndex = 404;
+        map.getPane('pane_Flsse_4').style['mix-blend-mode'] = 'normal';
+        var layer_Flsse_4 = new L.geoJson(json_Flsse_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Flsse_4',
+            layerName: 'layer_Flsse_4',
+            pane: 'pane_Flsse_4',
+            onEachFeature: pop_Flsse_4,
+            style: style_Flsse_4_0,
+        });
+        bounds_group.addLayer(layer_Flsse_4);
+        map.addLayer(layer_Flsse_4);
+
+/*Hier wird der Layer Rhein eingefügt*/
+        function pop_DerRhein_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Name:</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_DerRhein_5_0() {
+            return {
+                pane: 'pane_DerRhein_5',
+                opacity: 1,
+                color: 'rgba(10,21,144,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_DerRhein_5');
+        map.getPane('pane_DerRhein_5').style.zIndex = 405;
+        map.getPane('pane_DerRhein_5').style['mix-blend-mode'] = 'normal';
+        var layer_DerRhein_5 = new L.geoJson(json_DerRhein_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_DerRhein_5',
+            layerName: 'layer_DerRhein_5',
+            pane: 'pane_DerRhein_5',
+            onEachFeature: pop_DerRhein_5,
+            style: style_DerRhein_5_0,
+        });
+        bounds_group.addLayer(layer_DerRhein_5);
+        map.addLayer(layer_DerRhein_5);
+
+/*Hier wird der Stadt Layer geladen*/
+        function pop_Stdte_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Stadt:</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Land:</th>\
+                        <td>' + (feature.properties['NUTS0'] !== null ? autolinker.link(feature.properties['NUTS0'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Stdte_6_0() {
+            return {
+                pane: 'pane_Stdte_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/blue-marker.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Stdte_6');
+        map.getPane('pane_Stdte_6').style.zIndex = 406;
+        map.getPane('pane_Stdte_6').style['mix-blend-mode'] = 'normal';
+        var layer_Stdte_6 = new L.geoJson(json_Stdte_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Stdte_6',
+            layerName: 'layer_Stdte_6',
+            pane: 'pane_Stdte_6',
+            onEachFeature: pop_Stdte_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Stdte_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Stdte_6);
+        map.addLayer(layer_Stdte_6);
+        map.on("zoomend", function(e) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 2) {
+                map.addLayer(layer_Flsse_4);
+            } else if (map.getZoom() > 19 || map.getZoom() < 2) {
+                map.removeLayer(layer_Flsse_4);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 8) {
+                map.addLayer(layer_Stdte_6);
+            } else if (map.getZoom() > 19 || map.getZoom() < 8) {
+                map.removeLayer(layer_Stdte_6);
+            }
+        });
+            if (map.getZoom() <= 19 && map.getZoom() >= 2) {
+                map.addLayer(layer_Flsse_4);
+            } else if (map.getZoom() > 19 || map.getZoom() < 2) {
+                map.removeLayer(layer_Flsse_4);
+            }
+            if (map.getZoom() <= 19 && map.getZoom() >= 8) {
+                map.addLayer(layer_Stdte_6);
+            } else if (map.getZoom() > 19 || map.getZoom() < 8) {
+                map.removeLayer(layer_Stdte_6);
+            }
+
+/*Hier kommt das Widget zu Geolocate deine Position finden*/
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Suche nach einem Ort'; /* Hier kann der Anzeigen Text geändert werden wenn mit der Maus darübergefharen wird*/
+
+
+
+
+/*Hier werden die BaseMaplayer zusammengefügt und die Bilder für die legende geladen*/
+
+        var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+            });
+
+        var baseMaps = {
+            "Open Topo Map": OpenTopoMap, /* Zustätzlich geladene Karte aus dem Internet als Hintergrund*/
+            "OSM Standard Map": layer_HintergrundkarteOSMStandard_0, /* Die in QGIS ausgesuchte Hintergrundkarte habe ich aus den Control.Layers in die BaseMaps geschoben um als Hintergrundkarte und nicht als Layer zu funktionieren*/
+        };
+
+        var overlayMaps = {'<img src="legend/Stdte_6.png" /> Städte': layer_Stdte_6,'<img src="legend/DerRhein_5.png" /> Der Rhein': layer_DerRhein_5,'<img src="legend/Flsse_4.png" /> Flüsse': layer_Flsse_4,}
+        
+        var overlayMaps2= {'<img src="legend/Frankreich_3.png" /> Frankreich': layer_Frankreich_3,'<img src="legend/Deutschland_2.png" /> Deutschland': layer_Deutschland_2,'<img src="legend/Schweiz_1.png" /> Schweiz': layer_Schweiz_1,
+            }
+        
+        var groupedOverlays = {
+            "Verfügbare Layer:": overlayMaps,
+            "SMI Projektgebiete in:": overlayMaps2
+            };
+    
+        L.control.groupedLayers(baseMaps,groupedOverlays).addTo(map);
+
+
+        setBounds(); /*Hier hane ich im QGIS mal eine Zoombeschränkung eingeschaltet*/
+        resetLabels([layer_DerRhein_5,layer_Stdte_6]);
+        map.on("zoomend", function(){
+            resetLabels([layer_DerRhein_5,layer_Stdte_6]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_DerRhein_5,layer_Stdte_6]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_DerRhein_5,layer_Stdte_6]);
+        });
+
+        </script>
+    </body>
+</html>
