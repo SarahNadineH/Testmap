@@ -35,35 +35,18 @@
         <script src="data/rhine.geojson" type="text/javascript"></script>
         <script src="data/rivers.geojson" type="text/javascript"></script>
         <script src="data/countries.geojson" type="text/javascript"></script>
+	    <script src="data/Gemeindezentren.geojson" type="text/javascript"></script>
 
         <!-- In production this should go into a css file of its own-->
         <style>
-//This is a clean slate of styles
-           *{
-                margin: 0;
-                padding: 0;
-                list-style: none;
-                text-decoration: none;
-            } 
-          //Create the style for the header
-	    .header{
-                width: 100%;
-                height:80px;
-                display: block;
-		background-color: #101010;
-		}
-	    .logo_container{ 
+            html, body {
                 height: 100%;
-                display: table;
-                float: left;
+                margin: 0;
             }
-	    .logo_container img{
-                display: all;
-            }
-	   /* Here, you can change the size of the map */
+            /* Here, you can change the size of the map */
             #map {
                 width: 100%;
-                height: 80%;
+                height: 100%;
             }
             /* This is needed to style the text-labels */
             .text-label {
@@ -87,9 +70,25 @@
             #brand:hover {
                 background-color: rgba(255, 255, 255, 0.8);
             }
-		
-	   
-            
+
+            .header {
+                padding: 20px; /* some padding */
+                text-align: center; /* center the text */
+                background: #1abc9c; /* green background */
+                color: white; /* white text color */
+            }
+
+            /* Increase the font size of the <h1> element */
+            .header h1 {
+                font-size: 40px;
+            }
+
+            #logo {
+                  float:left;
+                  width:65px;
+                  height:65px;
+                  margin:4px;
+                }
 
         </style>
     </head>
@@ -104,11 +103,11 @@
         <div class="header">
             <h1>My Website</h1>
             <p>A website created by me.</p>
-		<div class="logo_container">
-                         <img src="http://wiki.selfhtml.org/images/3/31/Hund.gif" width="208" height="181" alt="Hund">
-                    </div>
         </div> 
-	
+        <div id="logo">
+            <img scr="data/logo.png">
+        </div>
+        
 <!-- 
     This is a special javascript. While it is also possible to load it from a file 
     in the head, it's more common to place it as the last HTML tag inside the body.
@@ -197,6 +196,13 @@
         }
     });
 	
+    var gemeindenLayer = L.geoJSON(Gemeindezentren, {
+        style: {
+            color: "#00f",
+            opacity: 0.8,
+            weight: 0.8
+        }
+    });
 
     // collect everything for the base information
     // this is a self-build project basemap
